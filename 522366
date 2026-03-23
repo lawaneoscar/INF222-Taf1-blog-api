@@ -1,0 +1,27 @@
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const connectDB = require('./src/config/database');
+
+dotenv.config();
+connectDB();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+        res.json({ message: 'Bienvenue sur l\'API du Blog' });
+});
+
+const articleRoutes = require('./src/routes/articleRoutes');
+app.use('/api/articles', articleRoutes);
+
+app.listen(PORT, () => {
+        console.log(`Serveur démarré sur http://localhost:${PORT}`);
+});
+})
+})
