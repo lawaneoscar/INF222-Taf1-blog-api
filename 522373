@@ -1,0 +1,38 @@
+const mongoose = require('mongoose');
+
+const articleSchema = new mongoose.Schema({
+        titre: {
+                    type: String,
+                            required: [true, 'Le titre est obligatoire'],
+                                    trim: true
+        },
+            contenu: {
+                        type: String,
+                                required: [true, 'Le contenu est obligatoire']
+            },
+                auteur: {
+                            type: String,
+                                    required: [true, 'L\'auteur est obligatoire']
+                },
+                    date: {
+                                type: Date,
+                                        default: Date.now
+                    },
+                        categorie: {
+                                    type: String,
+                                            required: [true, 'La catégorie est obligatoire']
+                        },
+                            tags: {
+                                        type: [String],
+                                                default: []
+                            }
+});
+
+module.exports = mongoose.model('Article', articleSchema);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+})

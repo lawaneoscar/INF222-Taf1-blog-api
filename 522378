@@ -1,0 +1,100 @@
+const Article = require('../models/articleModel');
+
+exports.createArticle = async (req, res) => {
+        try {
+                    const { titre, contenu, auteur, categorie, tags } = req.body;
+                            const article = new Article({ titre, contenu, auteur, categorie, tags: tags || [] });
+                                    const savedArticle = await article.save();
+                                            res.status(201).json({ success: true, data: savedArticle });
+        } catch (error) {
+                    res.status(400).json({ success: false, message: error.message });
+        }
+};
+
+exports.getAllArticles = async (req, res) => {
+        try {
+                    const { categorie, auteur } = req.query;
+                            let filter = {};
+                                    if (categorie) filter.categorie = categorie;
+                                            if (auteur) filter.auteur = auteur;
+                                                    const articles = await Article.find(filter).sort({ date: -1 });
+                                                            res.status(200).json({ success: true, count: articles.length, data: articles });
+        } catch (error) {
+                    res.status(500).json({ success: false, message: error.message });
+        }
+};
+
+exports.getArticleById = async (req, res) => {
+        try {
+                    const article = await Article.findById(req.params.id);
+                            if (!article) return res.status(404).json({ success: false, message: 'Article non trouvé' });
+                                    res.status(200).json({ success: true, data: article });
+        } catch (error) {
+                    res.status(500).json({ success: false, message: error.message });
+        }
+};
+
+exports.updateArticle = async (req, res) => {
+        try {
+                    const article = await Article.findById(req.params.id);
+                            if (!article) return res.status(404).json({ success: false, message: 'Article non trouvé' });
+                                    
+                                            const { titre, contenu, categorie, tags } = req.body;
+                                                    if (titre) article.titre = titre;
+                                                            if (contenu) article.contenu = contenu;
+                                                                    if (categorie) article.categorie = categorie;
+                                                                            if (tags) article.tags = tags;
+                                                                                    
+                                                                                            const updatedArticle = await article.save();
+                                                                                                    res.status(200).json({ success: true, data: updatedArticle });
+        } catch (error) {
+                    res.status(400).json({ success: false, message: error.message });
+        }
+};
+
+exports.deleteArticle = async (req, res) => {
+        try {
+                    const article = await Article.findByIdAndDelete(req.params.id);
+                            if (!article) return res.status(404).json({ success: false, message: 'Article non trouvé' });
+                                    res.status(200).json({ success: true, message: 'Article supprimé' });
+        } catch (error) {
+                    res.status(500).json({ success: false, message: error.message });
+        }
+};
+
+exports.searchArticles = async (req, res) => {
+        try {
+                    const { query } = req.query;
+                            if (!query) return res.status(400).json({ success: false, message: 'Query requis' });
+                                    
+                                            const articles = await Article.find({
+                                                            $or: [
+                                                                                { titre: { $regex: query, $options: 'i' } },
+                                                                                                { contenu: { $regex: query, $options: 'i' } }
+                                                            ]
+                                            });
+                                                    res.status(200).json({ success: true, count: articles.length, data: articles });
+        } catch (error) {
+                    res.status(500).json({ success: false, message: error.message });
+        }
+};
+        }
+                                                            ]
+                                            })
+        }
+}
+        }
+        }
+}
+        }
+        }
+}
+        }
+        }
+}
+        }
+        }
+}
+        }
+        }
+}

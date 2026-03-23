@@ -1,0 +1,303 @@
+
+
+1.  Blog API
+
+API REST complète pour la gestion d'articles de blog. Développée dans le cadre du cours INF222 - Programmation Web.
+
+2. Technologies utilisées
+
+| Technologie | Version | Rôle |
+|-------------|---------|------|
+| **Node.js** | v18+ | Environnement d'exécution JavaScript |
+| **Express.js** | v4.18+ | Framework web pour la création de l'API |
+| **MongoDB Atlas** | - | Base de données NoSQL cloud |
+| **Mongoose** | v8.0+ | ODM pour l'interaction avec MongoDB |
+| **Dotenv** | v16.4+ | Gestion des variables d'environnement |
+| **CORS** | v2.8+ | Middleware de sécurité pour les requêtes cross-origin |
+
+
+3.  Fonctionnalités
+
+L'API permet de gérer des articles de blog avec les opérations suivantes :
+
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| **POST** | `/api/articles` | Créer un nouvel article |
+| **GET** | `/api/articles` |  Récupérer tous les articles |
+| **GET** | `/api/articles?categorie=Tech` |  Filtrer les articles par catégorie |
+| **GET** | `/api/articles/:id` | Récupérer un article par son ID |
+| **PUT** | `/api/articles/:id` | Modifier un article existant |
+| **DELETE**| `/api/articles/:id` |  Supprimer un article |
+| **GET** | `/api/articles/search?query=texte` |  Rechercher des articles par mot-clé |
+
+
+4. Structure du projet
+
+blog-api/
+├── src/
+│   ├── config/
+│   │   └── database.js          # Connexion à MongoDB
+│   ├── models/
+│   │   └── articleModel.js      # Schéma de données des articles
+│   ├── controllers/
+│   │   └── articleController.js # Logique métier (CRUD)
+│   └── routes/
+│       └── articleRoutes.js     # Définition des endpoints
+├── server.js                    # Point d'entrée de l'application
+├── package.json                 # Dépendances et scripts
+├── .env                         # Variables d'environnement (ignoré par Git)
+├── .gitignore                   # Fichiers à exclure du dépôt
+└── README.md                    # Documentation du projet
+
+
+5. Installation et configuration
+
+  5.1, Cloner le dépôt
+
+```bash
+git clone https://github.com/lawaneoscar /blog-api.git
+cd blog-api
+```
+
+5.2 ,Installer les dépendances
+
+```bash
+npm install
+```
+
+5.3,Configurer les variables d'environnement
+
+Créez un fichier .env à la racine du projet :
+
+```env
+PORT=3000
+MONGODB_URI=mongodb+srv://votre_nom:votre_mdp@cluster0.xxxxx.mongodb.net/blog_db
+```
+
+5.4Démarrer le serveur
+
+Mode développement (avec auto-reload) :
+
+```bash
+npm run dev
+```
+
+Mode production :
+
+```bash
+npm start
+```
+
+5.5 Vérifier que le serveur fonctionne
+
+Ouvrez votre navigateur et allez sur :
+
+```
+http://localhost:3000
+```
+
+Vous devriez voir :
+
+```json
+{
+    "message": "Bienvenue sur l'API du Blog"
+}
+```
+
+6.Test de l'API avec Postman
+
+a. Créer un article (POST)
+
+Requête :
+
+```
+POST http://localhost:3000/api/articles
+```
+
+Headers :
+
+```
+Content-Type: application/json
+```
+
+Body (JSON) :
+
+```json
+{
+    "titre": "Mon premier article",
+    "contenu": "Ceci est le contenu de mon premier article sur le développement web.",
+    "auteur": "Jean Dupont",
+    "categorie": "Tech",
+    "tags": ["nodejs", "api", "express"]
+}
+```
+
+Réponse attendue (201 Created) 
+
+
+ B. Récupérer tous les articles (GET)
+
+Requête :
+
+```
+GET http://localhost:3000/api/articles
+```
+Réponse attendue (200 OK) 
+
+
+C. Filtrer par catégorie
+
+Requête :
+
+```
+GET http://localhost:3000/api/articles?categorie=Tech
+```
+
+D. Récupérer un article par ID (GET)
+
+Requête :
+
+```
+GET http://localhost:3000/api/articles/65f7a1b2c3d4e5f6a7b8c9d0
+```
+
+Réponse si l'article existe (200 OK) :
+
+```json
+{
+    "success": true,
+    "data": { ... }
+}
+```
+
+Réponse si l'article n'existe pas (404 Not Found) :
+
+```json
+{
+    "success": false,
+    "message": "Article non trouvé"
+}
+```
+
+E. Modifier un article (PUT)
+
+Requête :
+
+```
+PUT http://localhost:3000/api/articles/65f7a1b2c3d4e5f6a7b8c9d0
+```
+
+Body (JSON) :
+
+```json
+{
+    "titre": "Mon article modifié",
+    "categorie": "JavaScript"
+}
+```
+
+F. Supprimer un article (DELETE)
+
+Requête :
+
+```
+DELETE http://localhost:3000/api/articles/65f7a1b2c3d4e5f6a7b8c9d0
+```
+
+Réponse attendue (200 OK) :
+
+```json
+{
+    "success": true,
+    "message": "Article supprimé avec succès"
+}
+```
+
+G .Rechercher des articles (GET)
+
+Requête :
+
+```
+GET http://localhost:3000/api/articles/search?query=web
+```
+
+Réponse attendue (200 OK) :
+
+```json
+{
+    "success": true,
+    "count": 2,
+    "data": [
+        { "titre": "Introduction au web", ... },
+        { "titre": "Développement web moderne", ... }
+    ]
+}
+```
+
+7. Codes HTTP utilisés
+
+Code Signification Situation
+200 OK Requête réussie (GET, PUT, DELETE)
+201 Created Article créé avec succès
+400 Bad Request Champs manquants ou invalides
+404 Not Found Article non trouvé
+500 Internal Server Error Erreur serveur
+
+
+8. Modèle de données
+
+Champ Type Requis Description
+titre String  Titre de l'article
+contenu String  Contenu de l'article
+auteur String  Nom de l'auteur
+date Date  Date de publication (défaut: Date.now)
+categorie String  Catégorie de l'article
+tags Array Liste de mots-clés
+
+
+9. Gestion des erreurs
+
+Exemple de réponse en cas d'erreur de validation :
+
+```json
+{
+    "success": false,
+    "message": "Le titre est obligatoire"
+}
+```
+
+
+10. Améliorations futures
+
+· Ajouter l'authentification JWT
+· Documenter l'API avec Swagger
+· Ajouter la pagination
+· Déployer sur Railway/Render
+· Créer une interface frontend (React)
+
+Merci pour votre lecture ! 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
